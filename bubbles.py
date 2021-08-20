@@ -13,6 +13,8 @@ class Bubble(pygame.sprite.Sprite):
         pygame.draw.rect(self.image, color, [0, 0, width, height])
 
         self.rect = self.image.get_rect()
+
+        self.mask = pygame.mask.from_surface(self.image)
     
     def move(self, speed, direction):
         """

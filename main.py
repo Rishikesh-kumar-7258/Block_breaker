@@ -10,14 +10,21 @@ GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 CHOCOLATY = (210, 105, 30)
 GRAY = (128, 128, 128)
+BLACK = (0, 0, 0)
 #================= COLORS ===================#
 
 #=============== GAME WINDOW =============#
 WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 600
 SCREEN = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-pygame.display.set_caption("Bubble Shooter")
+pygame.display.set_caption("Ball Breaker")
 #=============== GAME WINDOW =============#
+
+#============= Score window =================#
+score_height = 50
+SCORE = 0
+score_color = BLACK
+#============= Score window =================#
 
 #=============== Bubble sprite ==============#
 bubbles = pygame.sprite.Group()
@@ -29,14 +36,16 @@ col_count = WINDOW_WIDTH // (bubble_size + 4)
 
 for i in range(row_count):
     for j in range(col_count-1):
-        bubble = Bubble(bubble_size, bubble_size, CHOCOLATY)
+        # if (j&1 == 1) : continue
+        bubble = Ball(bubble_size, bubble_size, CHOCOLATY)
         bubble.rect.x = j*(bubble_size+5) + 10
-        bubble.rect.y = i*(bubble_size+5) + 5
+        bubble.rect.y = i*(bubble_size+5) + score_height + 2
         bubbles.add(bubble)
         all_sprites.add(bubble)
 #=============== Bubble sprite ==============#
 
 #===================== Slider =========================#
+plank = pygame.sprite.GroupSingle()
 slider_width = 60
 slider_height = 15
 slider_speed = 5
@@ -45,17 +54,29 @@ slider = Bubble(slider_width, slider_height, GREEN)
 slider.rect.x = (WINDOW_WIDTH // 2) - (slider_width // 2)
 slider.rect.y = WINDOW_HEIGHT - slider_height - 5
 all_sprites.add(slider)
+plank.add(slider)
 #===================== Slider =========================#
 
-#==================== Moving Ball =======================#
-ball_radius = 20
-# ball_width = 20
-ball_speed = 10
-ball = Ball(ball_radius, RED)
-ball.rect.x = slider.rect.x + slider_width // 2
-ball.rect.y = slider.rect.y - slider_height // 2 - ball_radius
+#==================== Ball =======================#
+ball_size = 20
+ball_speed = 4
+ball_direction = [1, -1]
+ball = Ball(ball_size, ball_size, RED)
+ball.rect.x = slider.rect.x + ball_size + 2
+ball.rect.y = slider.rect.y - slider_height - ball_size // 4
 all_sprites.add(ball)
-#==================== Moving Ball =======================#
+#==================== Ball =======================#
+
+#============= Text =====================#
+font = pygame.font.SysFont("none", 55)
+def print_text(t, color, x, y):
+    text = font.render(t, True, WHITE, BLACK)
+    textRect = text.get_rect()
+    textRect.x = x
+    textRect.y = y
+    SCREEN.blit(text, textRect)
+#============= Text =====================#
+
 
 GAME_OVER = False
 clock = pygame.time.Clock()
@@ -79,7 +100,32 @@ while not GAME_OVER:
         slider_direction = 0
     #===== moving the slider =========#
 
+    #========= moving the ball =============#
+    ball.move(ball_speed*ball_direction[0], ball_speed*ball_direction[1])
+    if (ball.rect.x <= 0) or (ball.rect.x >= WINDOW_WIDTH - ball_size) : ball_direction[0] *= -1
+    if (ball.rect.y <= score_height) : ball_direction[1] *= -1
+    #========= moving the ball =============#
+
+    #================ collision detection ===============#
+    slider_collision = pygame.sprite.spritecollide(ball, plank, False, pygame.sprite.collide_mask)
+    for s in slider_collision:
+        if (ball.rect.x > s.rect.x and ball.rect.x < s.rect.x + slider_width):
+            ball_direction[1] *= -1
+        elif (ball.rect.y > s.rect.y and ball.rect.y < s.rect.y + slider_height):
+            ball_direction[0] *= -1
+
+    shooted_bubbles = pygame.sprite.spritecollide(ball, bubbles, True, pygame.sprite.collide_mask)
+    for b in shooted_bubbles:
+        if (ball.rect.x > b.rect.x and ball.rect.x < b.rect.x + bubble_size):
+            ball_direction[1] *= -1
+        elif (ball.rect.y > b.rect.y and ball.rect.y < b.rect.y + bubble_size):
+            ball_direction[0] *= -1
+        SCORE += 1
+    #================ collision detection ===============#
+
     SCREEN.fill(GRAY)
+    pygame.draw.rect(SCREEN, score_color, [0, 0, WINDOW_WIDTH, score_height])
+    print_text(f"score : {SCORE}", WHITE, 0, 10)
     all_sprites.update()
     all_sprites.draw(SCREEN)
     pygame.display.flip()
