@@ -1,6 +1,7 @@
 import pygame
 from bubbles import Bubble
 from ball import Ball
+from stats import Add_new_data
 pygame.init()
 
 #================= COLORS ====================#
@@ -11,6 +12,8 @@ RED = (255, 0, 0)
 CHOCOLATY = (210, 105, 30)
 GRAY = (128, 128, 128)
 BLACK = (0, 0, 0)
+LIGHTBLUE = (173, 216, 230)
+DARKCYAN = (0, 139, 139)
 #================= COLORS ===================#
 
 #=============== GAME WINDOW =============#
@@ -24,6 +27,7 @@ pygame.display.set_caption("Ball Breaker")
 score_height = 50
 SCORE = 0
 score_color = BLACK
+HIGH_SCORE = 0
 #============= Score window =================#
 
 #=============== Bubble sprite ==============#
@@ -37,7 +41,7 @@ col_count = WINDOW_WIDTH // (bubble_size + 4)
 for i in range(row_count):
     for j in range(col_count-1):
         # if (j&1 == 1) : continue
-        bubble = Ball(bubble_size, bubble_size, CHOCOLATY)
+        bubble = Ball(bubble_size, bubble_size, DARKCYAN)
         bubble.rect.x = j*(bubble_size+5) + 10
         bubble.rect.y = i*(bubble_size+5) + score_height + 2
         bubbles.add(bubble)
@@ -69,7 +73,7 @@ all_sprites.add(ball)
 
 #============= Text =====================#
 font = pygame.font.SysFont("none", 55)
-def print_text(t, color, x, y):
+def print_text(t, color, x,y):
     text = font.render(t, True, WHITE, BLACK)
     textRect = text.get_rect()
     textRect.x = x
@@ -77,6 +81,65 @@ def print_text(t, color, x, y):
     SCREEN.blit(text, textRect)
 #============= Text =====================#
 
+#================== Game State =====================#
+GAME_STATE = "start"
+def state_play(gs):
+    """
+        Takes game state and plays the game accordingly
+    """
+
+    if gs == "start":
+        
+        print_text("Bubble Shooter", LIGHTBLUE, WINDOW_WIDTH // 2 - 110, WINDOW_HEIGHT // 2 - 55)
+        print_text("press spaceboar to play", WHITE, WINDOW_WIDTH // 2 - 220, WINDOW_HEIGHT // 2 + 55)
+
+    elif gs == "play":
+
+        global slider_direction
+        #===== moving the slider =========#
+        slider.move(slider_speed, slider_direction)
+        if (slider.rect.x <= 0 or slider.rect.x >= WINDOW_WIDTH - slider_width):
+            slider_direction = 0
+        #===== moving the slider =========#
+
+        #========= moving the ball =============#
+        ball.move(ball_speed*ball_direction[0], ball_speed*ball_direction[1])
+        if (ball.rect.x <= 0) or (ball.rect.x >= WINDOW_WIDTH - ball_size) : ball_direction[0] *= -1
+        if (ball.rect.y <= score_height) : ball_direction[1] *= -1
+        if (ball.rect.y >= WINDOW_HEIGHT): 
+            print("this is working")
+            GAME_STATE = "over"
+        #========= moving the ball =============#
+
+        #================ collision detection ===============#
+        slider_collision = pygame.sprite.spritecollide(ball, plank, False, pygame.sprite.collide_mask)
+        for s in slider_collision:
+            if (ball.rect.x > s.rect.x and ball.rect.x < s.rect.x + slider_width):
+                ball_direction[1] *= -1
+            elif (ball.rect.y > s.rect.y and ball.rect.y < s.rect.y + slider_height):
+                ball_direction[0] *= -1
+
+        shooted_bubbles = pygame.sprite.spritecollide(ball, bubbles, True, pygame.sprite.collide_mask)
+        for b in shooted_bubbles:
+            global SCORE
+            if (ball.rect.x > b.rect.x and ball.rect.x < b.rect.x + bubble_size):
+                ball_direction[1] *= -1
+            elif (ball.rect.y > b.rect.y and ball.rect.y < b.rect.y + bubble_size):
+                ball_direction[0] *= -1
+            SCORE += 1
+        #================ collision detection ===============#
+        
+        pygame.draw.rect(SCREEN, score_color, [0, 0, WINDOW_WIDTH, score_height])
+        print_text(f"score : {SCORE}", WHITE, 0, 10)
+        all_sprites.update()
+        all_sprites.draw(SCREEN)
+    elif gs == "over":
+        print_text("Game Over!", RED, WINDOW_WIDTH // 2 - 110, WINDOW_HEIGHT // 2)
+        print_text(f"score : {SCORE}", WHITE, 0, 10)
+        print_text(f"High Score : {HIGH_SCORE}", WINDOW_WIDTH // 2 - 110, WINDOW_HEIGHT // 2 + 55)
+
+
+#================== Game State =====================#
 
 GAME_OVER = False
 clock = pygame.time.Clock()
@@ -84,50 +147,27 @@ clock = pygame.time.Clock()
 while not GAME_OVER:
 
     for event in pygame.event.get():
+
+        #quitting the game with red cross mark on the top right corner
         if event.type == pygame.QUIT:
             GAME_OVER = True
+        
+        #If any key is pressed
         if event.type == pygame.KEYDOWN:
+
             if event.key == pygame.K_LEFT and slider.rect.x > 0:
                 slider_direction = -1
             elif event.key == pygame.K_RIGHT and slider.rect.x < WINDOW_WIDTH - slider_width:
                 slider_direction = 1
+            
+            if event.key == pygame.K_SPACE and GAME_STATE == "start":
+                GAME_STATE = "play"
+
         elif event.type == pygame.KEYUP:
             slider_direction = 0
-    
-    #===== moving the slider =========#
-    slider.move(slider_speed, slider_direction)
-    if (slider.rect.x <= 0 or slider.rect.x >= WINDOW_WIDTH - slider_width):
-        slider_direction = 0
-    #===== moving the slider =========#
 
-    #========= moving the ball =============#
-    ball.move(ball_speed*ball_direction[0], ball_speed*ball_direction[1])
-    if (ball.rect.x <= 0) or (ball.rect.x >= WINDOW_WIDTH - ball_size) : ball_direction[0] *= -1
-    if (ball.rect.y <= score_height) : ball_direction[1] *= -1
-    #========= moving the ball =============#
-
-    #================ collision detection ===============#
-    slider_collision = pygame.sprite.spritecollide(ball, plank, False, pygame.sprite.collide_mask)
-    for s in slider_collision:
-        if (ball.rect.x > s.rect.x and ball.rect.x < s.rect.x + slider_width):
-            ball_direction[1] *= -1
-        elif (ball.rect.y > s.rect.y and ball.rect.y < s.rect.y + slider_height):
-            ball_direction[0] *= -1
-
-    shooted_bubbles = pygame.sprite.spritecollide(ball, bubbles, True, pygame.sprite.collide_mask)
-    for b in shooted_bubbles:
-        if (ball.rect.x > b.rect.x and ball.rect.x < b.rect.x + bubble_size):
-            ball_direction[1] *= -1
-        elif (ball.rect.y > b.rect.y and ball.rect.y < b.rect.y + bubble_size):
-            ball_direction[0] *= -1
-        SCORE += 1
-    #================ collision detection ===============#
-
-    SCREEN.fill(GRAY)
-    pygame.draw.rect(SCREEN, score_color, [0, 0, WINDOW_WIDTH, score_height])
-    print_text(f"score : {SCORE}", WHITE, 0, 10)
-    all_sprites.update()
-    all_sprites.draw(SCREEN)
+    SCREEN.fill(BLACK)
+    state_play(GAME_STATE)
     pygame.display.flip()
     clock.tick(60)
         
