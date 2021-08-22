@@ -2,6 +2,7 @@ import pygame
 from bubbles import Bubble
 from ball import Ball
 from stats import Add_new_data
+from datetime import datetime
 pygame.init()
 
 #================= COLORS ====================#
@@ -28,6 +29,7 @@ score_height = 50
 SCORE = 0
 score_color = BLACK
 HIGH_SCORE = 0
+NAME = ""
 #============= Score window =================#
 
 #=============== Bubble sprite ==============#
@@ -73,13 +75,38 @@ all_sprites.add(ball)
 
 #============= Text =====================#
 font = pygame.font.SysFont("none", 55)
+name = pygame.font.SysFont("none", 25)
 def print_text(t, color, x,y):
-    text = font.render(t, True, WHITE, BLACK)
+    text = font.render(t, True, color, BLACK)
     textRect = text.get_rect()
     textRect.x = x
     textRect.y = y
     SCREEN.blit(text, textRect)
+
+def input_name():
+    global NAME
+    def print_something(t, x, y):
+        text = name.render(t, True, GREEN, BLACK)
+        textRect = text.get_rect()
+        textRect.x = x
+        textRect.y = y
+        SCREEN.blit(text, textRect)
+    print_something(f"Enter your Name: {NAME}", WINDOW_WIDTH // 4, WINDOW_HEIGHT//4)
+
 #============= Text =====================#
+
+def restart():
+    """
+        starting a new game
+    """
+    ball.rect.x = slider.rect.x + ball_size + 2
+    ball.rect.y = slider.rect.y - slider_height - ball_size // 4 
+    slider.rect.x = (WINDOW_WIDTH // 2) - (slider_width // 2)
+    slider.rect.y = WINDOW_HEIGHT - slider_height - 5
+    SCORE = 0
+    ball_direction = [1, -1]
+    return
+
 
 #================== Game State =====================#
 GAME_STATE = "start"
@@ -87,11 +114,12 @@ def state_play(gs):
     """
         Takes game state and plays the game accordingly
     """
-
+    global GAME_STATE
     if gs == "start":
         
         print_text("Bubble Shooter", LIGHTBLUE, WINDOW_WIDTH // 2 - 110, WINDOW_HEIGHT // 2 - 55)
-        print_text("press spaceboar to play", WHITE, WINDOW_WIDTH // 2 - 220, WINDOW_HEIGHT // 2 + 55)
+        input_name()
+        print_text("press Tab to play", LIGHTBLUE, WINDOW_WIDTH // 2 - 220, WINDOW_HEIGHT // 2 + 55)
 
     elif gs == "play":
 
@@ -106,8 +134,7 @@ def state_play(gs):
         ball.move(ball_speed*ball_direction[0], ball_speed*ball_direction[1])
         if (ball.rect.x <= 0) or (ball.rect.x >= WINDOW_WIDTH - ball_size) : ball_direction[0] *= -1
         if (ball.rect.y <= score_height) : ball_direction[1] *= -1
-        if (ball.rect.y >= WINDOW_HEIGHT): 
-            print("this is working")
+        if (ball.rect.y >= WINDOW_HEIGHT):
             GAME_STATE = "over"
         #========= moving the ball =============#
 
@@ -136,7 +163,11 @@ def state_play(gs):
     elif gs == "over":
         print_text("Game Over!", RED, WINDOW_WIDTH // 2 - 110, WINDOW_HEIGHT // 2)
         print_text(f"score : {SCORE}", WHITE, 0, 10)
-        print_text(f"High Score : {HIGH_SCORE}", WINDOW_WIDTH // 2 - 110, WINDOW_HEIGHT // 2 + 55)
+        print_text(f"High Score : {HIGH_SCORE}", WHITE, WINDOW_WIDTH // 2 - 110, WINDOW_HEIGHT // 2 + 55)
+        print_text("press spacebar to play again", LIGHTBLUE, WINDOW_WIDTH // 2 - 220, WINDOW_HEIGHT // 2 + 220)
+        restart()
+        # currTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        # Add_new_data(NAME, currTime, SCORE)
 
 
 #================== Game State =====================#
@@ -150,18 +181,26 @@ while not GAME_OVER:
 
         #quitting the game with red cross mark on the top right corner
         if event.type == pygame.QUIT:
+            if GAME_STATE == "over":
+                now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                Add_new_data(NAME, str(now), SCORE)
             GAME_OVER = True
         
         #If any key is pressed
         if event.type == pygame.KEYDOWN:
-
+            if GAME_STATE == "start":
+                if event.key == pygame.K_TAB:
+                    GAME_STATE = "play"
+                else : NAME += event.unicode
+            if GAME_STATE == "over":
+                if event.key == pygame.K_SPACE:
+                    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    Add_new_data(NAME, str(now), SCORE)
+                    GAME_STATE = "play"
             if event.key == pygame.K_LEFT and slider.rect.x > 0:
                 slider_direction = -1
             elif event.key == pygame.K_RIGHT and slider.rect.x < WINDOW_WIDTH - slider_width:
                 slider_direction = 1
-            
-            if event.key == pygame.K_SPACE and GAME_STATE == "start":
-                GAME_STATE = "play"
 
         elif event.type == pygame.KEYUP:
             slider_direction = 0
