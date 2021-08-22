@@ -74,8 +74,8 @@ all_sprites.add(ball)
 #==================== Ball =======================#
 
 #============= Text =====================#
-font = pygame.font.SysFont("none", 55)
-name = pygame.font.SysFont("none", 25)
+font = pygame.font.SysFont("Roboto", 55)
+name = pygame.font.SysFont("Roboto", 25)
 def print_text(t, color, x,y):
     text = font.render(t, True, color, BLACK)
     textRect = text.get_rect()
