@@ -1,7 +1,7 @@
 import pygame
 from bubbles import Bubble
 from ball import Ball
-from stats import Add_new_data
+from stats import Add_new_data, get_highScore
 from datetime import datetime
 pygame.init()
 
@@ -28,7 +28,7 @@ pygame.display.set_caption("Ball Breaker")
 score_height = 50
 SCORE = 0
 score_color = BLACK
-HIGH_SCORE = 0
+HIGH_SCORE = get_highScore()
 NAME = ""
 #============= Score window =================#
 
@@ -43,7 +43,6 @@ col_count = WINDOW_WIDTH // (bubble_size + 4)
 def show_bubbles():
     for i in range(row_count):
         for j in range(col_count-1):
-            # if (j&1 == 1) : continue
             bubble = Ball(bubble_size, bubble_size, DARKCYAN)
             bubble.rect.x = j*(bubble_size+5) + 10
             bubble.rect.y = i*(bubble_size+5) + score_height + 2
@@ -77,7 +76,7 @@ all_sprites.add(ball)
 
 #============= Text =====================#
 def print_text(t, color, x,y, font_size, center=True):
-    font = pygame.font.SysFont("Roboto", font_size)
+    font = pygame.font.SysFont(None, font_size)
     text = font.render(t, True, color, BLACK)
     textRect = text.get_rect()
     textRect.x = x
@@ -91,14 +90,19 @@ def restart():
     """
         starting a new game
     """
-    global GAME_STATE
-    ball.rect.x = slider.rect.x + ball_size + 2
-    ball.rect.y = slider.rect.y - slider_height - ball_size // 4 
+    global GAME_STATE, SCORE, ball, slider, bubbles, plank, all_sprites
+    bubbles.empty()
+    plank.empty()
+    all_sprites.empty()
     slider.rect.x = (WINDOW_WIDTH // 2) - (slider_width // 2)
     slider.rect.y = WINDOW_HEIGHT - slider_height - 5
+    ball.rect.x = slider.rect.x + ball_size + 2
+    ball.rect.y = slider.rect.y - slider_height - ball_size // 4
     SCORE = 0
     ball_direction = [1, -1]
-    bubbles.remove()
+    all_sprites.add(slider)
+    all_sprites.add(ball)
+    plank.add(slider)
     show_bubbles()
     return
 
