@@ -40,14 +40,16 @@ bubble_size = 25
 row_count = WINDOW_HEIGHT // (bubble_size * 3)
 col_count = WINDOW_WIDTH // (bubble_size + 4)
 
-for i in range(row_count):
-    for j in range(col_count-1):
-        # if (j&1 == 1) : continue
-        bubble = Ball(bubble_size, bubble_size, DARKCYAN)
-        bubble.rect.x = j*(bubble_size+5) + 10
-        bubble.rect.y = i*(bubble_size+5) + score_height + 2
-        bubbles.add(bubble)
-        all_sprites.add(bubble)
+def show_bubbles():
+    for i in range(row_count):
+        for j in range(col_count-1):
+            # if (j&1 == 1) : continue
+            bubble = Ball(bubble_size, bubble_size, DARKCYAN)
+            bubble.rect.x = j*(bubble_size+5) + 10
+            bubble.rect.y = i*(bubble_size+5) + score_height + 2
+            bubbles.add(bubble)
+            all_sprites.add(bubble)
+show_bubbles()
 #=============== Bubble sprite ==============#
 
 #===================== Slider =========================#
@@ -74,24 +76,14 @@ all_sprites.add(ball)
 #==================== Ball =======================#
 
 #============= Text =====================#
-font = pygame.font.SysFont("Roboto", 55)
-name = pygame.font.SysFont("Roboto", 25)
-def print_text(t, color, x,y):
+def print_text(t, color, x,y, font_size, center=True):
+    font = pygame.font.SysFont("Roboto", font_size)
     text = font.render(t, True, color, BLACK)
     textRect = text.get_rect()
     textRect.x = x
     textRect.y = y
-    SCREEN.blit(text, textRect)
-
-def input_name():
-    global NAME
-    def print_something(t, x, y):
-        text = name.render(t, True, GREEN, BLACK)
-        textRect = text.get_rect()
-        textRect.x = x
-        textRect.y = y
-        SCREEN.blit(text, textRect)
-    print_something(f"Enter your Name: {NAME}", WINDOW_WIDTH // 4, WINDOW_HEIGHT//4)
+    if center : SCREEN.blit(text, (textRect[0] - textRect[2] / 2, textRect[1] - textRect[3] / 2))
+    else : SCREEN.blit(text, textRect)
 
 #============= Text =====================#
 
@@ -99,12 +91,15 @@ def restart():
     """
         starting a new game
     """
+    global GAME_STATE
     ball.rect.x = slider.rect.x + ball_size + 2
     ball.rect.y = slider.rect.y - slider_height - ball_size // 4 
     slider.rect.x = (WINDOW_WIDTH // 2) - (slider_width // 2)
     slider.rect.y = WINDOW_HEIGHT - slider_height - 5
     SCORE = 0
     ball_direction = [1, -1]
+    bubbles.remove()
+    show_bubbles()
     return
 
 
@@ -116,10 +111,9 @@ def state_play(gs):
     """
     global GAME_STATE
     if gs == "start":
-        
-        print_text("Bubble Shooter", LIGHTBLUE, WINDOW_WIDTH // 2 - 110, WINDOW_HEIGHT // 2 - 55)
-        input_name()
-        print_text("press Tab to play", LIGHTBLUE, WINDOW_WIDTH // 2 - 220, WINDOW_HEIGHT // 2 + 55)
+        print_text("Bubble Shooter", LIGHTBLUE, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 72)
+        print_text(f"Enter your Name: {NAME}", GREEN, WINDOW_WIDTH / 2, WINDOW_HEIGHT/2 - 100, 20)
+        print_text("press Tab to play", LIGHTBLUE, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + 100, 48)
 
     elif gs == "play":
 
@@ -157,18 +151,14 @@ def state_play(gs):
         #================ collision detection ===============#
         
         pygame.draw.rect(SCREEN, score_color, [0, 0, WINDOW_WIDTH, score_height])
-        print_text(f"score : {SCORE}", WHITE, 0, 10)
+        print_text(f"score : {SCORE}", WHITE, 0, 10, 24, False)
         all_sprites.update()
         all_sprites.draw(SCREEN)
     elif gs == "over":
-        print_text("Game Over!", RED, WINDOW_WIDTH // 2 - 110, WINDOW_HEIGHT // 2)
-        print_text(f"score : {SCORE}", WHITE, 0, 10)
-        print_text(f"High Score : {HIGH_SCORE}", WHITE, WINDOW_WIDTH // 2 - 110, WINDOW_HEIGHT // 2 + 55)
-        print_text("press spacebar to play again", LIGHTBLUE, WINDOW_WIDTH // 2 - 220, WINDOW_HEIGHT // 2 + 220)
-        restart()
-        # currTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        # Add_new_data(NAME, currTime, SCORE)
-
+        print_text("Game Over!", RED, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 72)
+        print_text(f"score : {SCORE}", WHITE, 0, 10, 24, False)
+        print_text(f"High Score : {HIGH_SCORE}", WHITE, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + 100, 48)
+        print_text("press spacebar to play again", LIGHTBLUE, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + 200, 48)
 
 #================== Game State =====================#
 
@@ -191,11 +181,16 @@ while not GAME_OVER:
             if GAME_STATE == "start":
                 if event.key == pygame.K_TAB:
                     GAME_STATE = "play"
-                else : NAME += event.unicode
+                else : 
+                    if event.key == pygame.K_BACKSPACE :
+                        NAME = NAME[:-1]
+                    elif event.unicode == '\r' : pass
+                    else : NAME += event.unicode
             if GAME_STATE == "over":
                 if event.key == pygame.K_SPACE:
                     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     Add_new_data(NAME, str(now), SCORE)
+                    restart()
                     GAME_STATE = "play"
             if event.key == pygame.K_LEFT and slider.rect.x > 0:
                 slider_direction = -1

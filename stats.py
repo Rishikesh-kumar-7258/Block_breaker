@@ -8,5 +8,8 @@ def Add_new_data(name, play_time, score):
     "play_time" : play_time,
     "scores" : score,
     }
+    i = 0
+    while (i < len(name) and name[i] == ' ') : i+= 1
+    if (i == len(name)) : return
     df = pd.DataFrame(new_data, index=[len(data)])
     df.to_csv("stats.csv", mode='a', header=False, index=False)
