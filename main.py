@@ -76,7 +76,7 @@ all_sprites.add(ball)
 
 #============= Text =====================#
 def print_text(t, color, x,y, font_size, center=True):
-    font = pygame.font.SysFont(None, font_size)
+    font = pygame.font.SysFont("Comic sans MS", font_size)
     text = font.render(t, True, color, BLACK)
     textRect = text.get_rect()
     textRect.x = x

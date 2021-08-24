@@ -1,19 +1,22 @@
-import pandas as pd
-
-data = pd.read_csv("stats.csv")
-
 def Add_new_data(name, play_time, score):
-    new_data = {
-    "player_name": name,
-    "play_time" : play_time,
-    "scores" : score,
-    }
+    file = open("C:\\Users\\Rishikesh Kumar\\Dropbox\\My PC (LAPTOP-KP31EEKV)\\Desktop\\Games\\Ball_breaker\\stats.csv", 'a+')
+    new_data = name + ',' + str(play_time) + "," + str(score)
     i = 0
-    while (i < len(name) and name[i] == ' ') : i+= 1
+    while (i < len(name) and name[i] == ' ') : i += 1
     if (i == len(name)) : return
-    df = pd.DataFrame(new_data, index=[len(data)])
-    df.to_csv("stats.csv", mode='a', header=False, index=False)
+    file.write(new_data)
+    file.close()
 
 def get_highScore():
-    highScore = max(data["scores"]) or 0
-    return highScore
+    file1 = open("C:\\Users\\Rishikesh Kumar\\Dropbox\\My PC (LAPTOP-KP31EEKV)\\Desktop\\Games\\Ball_breaker\\stats.csv")
+    scores = []
+    i = 0
+    for row in file1:
+        if i == 0 :
+            i+=1
+            continue
+        row = row.split(',')
+        scores.append(int(row[2][:-1]))
+        i += 1
+    return max(scores)
+    file1.close()
