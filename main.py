@@ -65,7 +65,7 @@ plank.add(slider)
 #===================== Slider =========================#
 
 #==================== Ball =======================#
-ball_size = 20
+ball_size = 15
 ball_speed = 4
 ball_direction = [1, -1]
 ball = Ball(ball_size, ball_size, RED)
@@ -130,8 +130,10 @@ def state_play(gs):
 
         #========= moving the ball =============#
         ball.move(ball_speed*ball_direction[0], ball_speed*ball_direction[1])
-        if (ball.rect.x <= 0) or (ball.rect.x >= WINDOW_WIDTH - ball_size) : ball_direction[0] *= -1
-        if (ball.rect.y <= score_height) : ball_direction[1] *= -1
+        if (ball.rect.x <= 0) : ball_direction[0] = 1
+        elif ball.rect.x >= WINDOW_WIDTH - ball_size : ball_direction[0] = -1
+
+        if (ball.rect.y <= score_height) : ball_direction[1] = 1
         if (ball.rect.y >= WINDOW_HEIGHT):
             GAME_STATE = "over"
         #========= moving the ball =============#
@@ -139,17 +141,19 @@ def state_play(gs):
         #================ collision detection ===============#
         slider_collision = pygame.sprite.spritecollide(ball, plank, False, pygame.sprite.collide_mask)
         for s in slider_collision:
-            if (ball.rect.x > s.rect.x and ball.rect.x < s.rect.x + slider_width):
-                ball_direction[1] *= -1
-            elif (ball.rect.y > s.rect.y and ball.rect.y < s.rect.y + slider_height):
-                ball_direction[0] *= -1
+            if (ball.rect.x > s.rect.x - ball_size / 2 and ball.rect.x < s.rect.x + slider_width + ball_size / 2):
+                if (ball.rect.y <= slider.rect.y - ball_size / 2) : ball_direction[1] = -1
+                else : ball_direction[1] = 1
+            elif (ball.rect.y > s.rect.y - ball_size / 2 and ball.rect.y < s.rect.y + slider_height + ball_size / 2):
+                if (ball.rect.x <= slider.rect.x - ball_size/2) : ball_direction[0] = -1
+                else : ball_direction[0] = 1
 
         shooted_bubbles = pygame.sprite.spritecollide(ball, bubbles, True, pygame.sprite.collide_mask)
         for b in shooted_bubbles:
             global SCORE
-            if (ball.rect.x > b.rect.x and ball.rect.x < b.rect.x + bubble_size):
+            if (ball.rect.x > b.rect.x - bubble_size / 2 and ball.rect.x < b.rect.x + bubble_size / 2):
                 ball_direction[1] *= -1
-            elif (ball.rect.y > b.rect.y and ball.rect.y < b.rect.y + bubble_size):
+            elif (ball.rect.y > b.rect.y - bubble_size / 2 and ball.rect.y < b.rect.y + bubble_size / 2):
                 ball_direction[0] *= -1
             SCORE += 1
         #================ collision detection ===============#

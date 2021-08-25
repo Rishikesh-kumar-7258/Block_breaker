@@ -1,6 +1,6 @@
 def Add_new_data(name, play_time, score):
     file = open("stats.csv", 'a+')
-    new_data = name + ',' + str(play_time) + "," + str(score)
+    new_data = name + ',' + str(play_time) + "," + str(score) + '\n'
     i = 0
     while (i < len(name) and name[i] == ' ') : i += 1
     if (i == len(name)) : return
