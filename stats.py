@@ -1,5 +1,5 @@
 def Add_new_data(name, play_time, score):
-    file = open("C:\\Users\\Rishikesh Kumar\\Dropbox\\My PC (LAPTOP-KP31EEKV)\\Desktop\\Games\\Ball_breaker\\stats.csv", 'a+')
+    file = open("stats.csv", 'a+')
     new_data = name + ',' + str(play_time) + "," + str(score)
     i = 0
     while (i < len(name) and name[i] == ' ') : i += 1
@@ -8,7 +8,7 @@ def Add_new_data(name, play_time, score):
     file.close()
 
 def get_highScore():
-    file1 = open("C:\\Users\\Rishikesh Kumar\\Dropbox\\My PC (LAPTOP-KP31EEKV)\\Desktop\\Games\\Ball_breaker\\stats.csv")
+    file1 = open("stats.csv")
     scores = []
     i = 0
     for row in file1:
