@@ -55,7 +55,7 @@ show_bubbles()
 plank = pygame.sprite.GroupSingle()
 slider_width = 60
 slider_height = 15
-slider_speed = 8
+slider_speed = 7
 slider_direction = 0
 slider = Bubble(slider_width, slider_height, GREEN)
 slider.rect.x = (WINDOW_WIDTH // 2) - (slider_width // 2)
