@@ -22,7 +22,7 @@ If you want to try this game on your computer then do the following steps:
 1. Download the zip file from codes in this repo
 2. Unzip this file on your personal device
 3. Open command propmt / poweshell window in the unzipped file
-4. In your command prompt / powershell window type ### python main.py
+4. In your command prompt / powershell window type python main.py
 5. If it shows some error download the required packages which is given in requirements.txt
 ```
 
