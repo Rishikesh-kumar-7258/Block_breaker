@@ -15,6 +15,7 @@ In this game we can learn how to work with
 - [ ] some issues are to be fixed in issues section please make sure to check them and make this game even better
 - [ ] If you feel some issues please mail me at [rishi7258prince@gmail.com](mailto:rishi7258prince@gmail.com)
 - [ ] Beginners like me feel free to learn and ask question. :+1:
+- [ ] There is an special issue in the issue section which requires new level. If you are interested or new to github contributions you can just print a good pattern for the game and make a pull request :cowboy_hat_face:
 
 ## Installation
 If you want to try this game on your computer then do the following steps:

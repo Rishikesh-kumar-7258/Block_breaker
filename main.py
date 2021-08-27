@@ -3,6 +3,7 @@ from bubbles import Bubble
 from ball import Ball
 from stats import Add_new_data, get_highScore
 from datetime import datetime
+from levels import level1, level2
 pygame.init()
 
 #================= COLORS ====================#
@@ -30,32 +31,29 @@ SCORE = 0
 score_color = BLACK
 HIGH_SCORE = get_highScore()
 NAME = ""
+LEVEL = 2
 #============= Score window =================#
 
 #=============== Bubble sprite ==============#
 bubbles = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
 
-bubble_size = 25
-row_count = WINDOW_HEIGHT // (bubble_size * 3)
-col_count = WINDOW_WIDTH // (bubble_size + 4)
+bubble_height = 25
+bubble_width = 50
+row_count = WINDOW_HEIGHT // (bubble_height * 3)
+col_count = WINDOW_WIDTH // (bubble_width + 4)
 
-def show_bubbles():
-    for i in range(row_count):
-        for j in range(col_count-1):
-            bubble = Ball(bubble_size, bubble_size, DARKCYAN)
-            bubble.rect.x = j*(bubble_size+5) + 10
-            bubble.rect.y = i*(bubble_size+5) + score_height + 2
-            bubbles.add(bubble)
-            all_sprites.add(bubble)
-show_bubbles()
+def show_bubbles(level):
+    if (level == 1) : level1(row_count, col_count, bubbles, all_sprites, score_height, LIGHTBLUE, (bubble_width, bubble_height))
+    elif (level == 2) : level2(row_count, col_count, bubbles, all_sprites, score_height, LIGHTBLUE, (bubble_width, bubble_height))
+show_bubbles(LEVEL)
 #=============== Bubble sprite ==============#
 
 #===================== Slider =========================#
 plank = pygame.sprite.GroupSingle()
 slider_width = 60
 slider_height = 15
-slider_speed = 7
+slider_speed = 8
 slider_direction = 0
 slider = Bubble(slider_width, slider_height, GREEN)
 slider.rect.x = (WINDOW_WIDTH // 2) - (slider_width // 2)
@@ -103,7 +101,7 @@ def restart():
     all_sprites.add(slider)
     all_sprites.add(ball)
     plank.add(slider)
-    show_bubbles()
+    show_bubbles(LEVEL)
     return
 
 
@@ -121,7 +119,7 @@ def state_play(gs):
 
     elif gs == "play":
 
-        global slider_direction
+        global slider_direction, GAME_STATE, LEVEL, SCORE, HIGH_SCORE
         #===== moving the slider =========#
         slider.move(slider_speed, slider_direction)
         if (slider.rect.x <= 0 or slider.rect.x >= WINDOW_WIDTH - slider_width):
@@ -135,6 +133,7 @@ def state_play(gs):
 
         if (ball.rect.y <= score_height) : ball_direction[1] = 1
         if (ball.rect.y >= WINDOW_HEIGHT):
+            HIGH_SCORE = SCORE if HIGH_SCORE < SCORE else HIGH_SCORE
             GAME_STATE = "over"
         #========= moving the ball =============#
 
@@ -149,11 +148,13 @@ def state_play(gs):
                 else : ball_direction[0] = 1
 
         shooted_bubbles = pygame.sprite.spritecollide(ball, bubbles, True, pygame.sprite.collide_mask)
+        if len(bubbles) == 0 : # IF THE PLAYER SMASHES ALL THE BLOCKS INCREASE THE LEVEL
+            LEVEL += 1
+            GAME_STATE = "over"
         for b in shooted_bubbles:
-            global SCORE
-            if (ball.rect.x > b.rect.x - bubble_size / 2 and ball.rect.x < b.rect.x + bubble_size / 2):
+            if (ball.rect.x > b.rect.x and ball.rect.x < b.rect.x + bubble_width):
                 ball_direction[1] *= -1
-            elif (ball.rect.y > b.rect.y - bubble_size / 2 and ball.rect.y < b.rect.y + bubble_size / 2):
+            elif (ball.rect.y > b.rect.y and ball.rect.y < b.rect.y + bubble_height):
                 ball_direction[0] *= -1
             SCORE += 1
         #================ collision detection ===============#

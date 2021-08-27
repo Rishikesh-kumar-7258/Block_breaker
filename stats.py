@@ -18,5 +18,6 @@ def get_highScore():
         row = row.split(',')
         scores.append(int(row[2][:-1]))
         i += 1
+    if (len(scores) == 0) : return 0
     return max(scores)
     file1.close()
