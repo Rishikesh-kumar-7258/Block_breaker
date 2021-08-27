@@ -1,6 +1,9 @@
 # Ball breaker
 This is a simple game made using pygame
 
+## game view
+https://user-images.githubusercontent.com/69416888/131142735-295211f3-8975-4251-b049-cc975127f895.mp4
+
 ## Learning concepts
 In this game we can learn how to work with 
 ```
