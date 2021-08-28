@@ -1,9 +1,12 @@
 import pygame
-from bubbles import Bubble
-from ball import Ball
+
+from Classes.bubbles import Bubble
+from Classes.ball import Ball
 from stats import Add_new_data, get_highScore
 from datetime import datetime
 from levels import level1, level2
+from Classes.buttons import Button
+
 pygame.init()
 
 #================= COLORS ====================#
@@ -11,6 +14,7 @@ WHITE = (255, 255, 255)
 BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
+DARKRED = (200, 0, 0)
 CHOCOLATY = (210, 105, 30)
 GRAY = (128, 128, 128)
 BLACK = (0, 0, 0)
@@ -117,6 +121,12 @@ def state_play(gs):
         print_text(f"Enter your Name: {NAME}", GREEN, WINDOW_WIDTH / 2, WINDOW_HEIGHT/2 - 100, 20)
         print_text("press Tab to play", LIGHTBLUE, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + 100, 48)
 
+        # Button(x, y, text, screen, color, hcolor)
+        startbtn = Button( 50, 50, "Play", SCREEN, RED)
+        if (startbtn.hover()) : 
+            startbtn = Button( 50, 50, "Play", SCREEN, DARKRED)
+            if (pygame.mouse.get_pressed()) : print("This is working")
+
     elif gs == "play":
 
         global slider_direction, GAME_STATE, LEVEL, SCORE, HIGH_SCORE
@@ -206,7 +216,7 @@ while not GAME_OVER:
             elif event.key == pygame.K_RIGHT and slider.rect.x < WINDOW_WIDTH - slider_width:
                 slider_direction = 1
 
-        elif event.type == pygame.KEYUP:
+        if event.type == pygame.KEYUP:
             slider_direction = 0
 
     SCREEN.fill(BLACK)

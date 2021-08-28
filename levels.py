@@ -1,4 +1,4 @@
-from bubbles import Bubble
+from Classes.bubbles import Bubble
 
 def level1(row_count, col_count, bubbles , all_sprites, score_height, color, size):
     for i in range(row_count):
