@@ -12,11 +12,14 @@ class Button:
         self.y = y
         self.color = color
 
-        button = pygame.draw.rect(screen, color, [x, y, BUTTON_WIDTH, BUTTON_HEIGHT])
+        global BUTTON_WIDTH
+
         font = pygame.font.SysFont("Comic sans MS", 25)
         t = font.render(text, True, BLACK, color)
         textRect = t.get_rect()
-        textRect.center = (x+BUTTON_WIDTH/2, y+BUTTON_HEIGHT/2)
+        textRect.center = (x + BUTTON_WIDTH/2, y+BUTTON_HEIGHT/2)
+        if (textRect[2] > BUTTON_WIDTH) : BUTTON_WIDTH = textRect[2] + 20
+        button = pygame.draw.rect(screen, color, [x, y, BUTTON_WIDTH, BUTTON_HEIGHT])
         screen.blit(t, textRect)
 
     def hover(self):

@@ -6,6 +6,9 @@ class Bubble(pygame.sprite.Sprite):
     def __init__(self, width, height, color):
         super().__init__()
 
+        self.width = width
+        self.height = height
+
         self.image = pygame.Surface([width, height])
         self.image.fill(WHITE)
         self.image.set_colorkey(WHITE)
@@ -22,3 +25,6 @@ class Bubble(pygame.sprite.Sprite):
         """
 
         self.rect.x += speed*direction
+    
+    def change_color(self, color):
+        pygame.draw.rect(self.image, color, [0, 0, self.width, self.height])

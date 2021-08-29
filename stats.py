@@ -1,3 +1,6 @@
+import os
+from os import path
+
 def Add_new_data(name, play_time, score):
     file = open("stats.csv", 'a+')
     new_data = name + ',' + str(play_time) + "," + str(score) + '\n'
@@ -8,6 +11,10 @@ def Add_new_data(name, play_time, score):
     file.close()
 
 def get_highScore():
+    if not path.exists("stats.csv") : 
+        file1 = open("stats.csv", 'w')
+        file1.write("player_name,play_time,scores\n")
+
     file1 = open("stats.csv")
     scores = []
     i = 0

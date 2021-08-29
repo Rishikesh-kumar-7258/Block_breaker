@@ -4,7 +4,7 @@ from Classes.bubbles import Bubble
 from Classes.ball import Ball
 from stats import Add_new_data, get_highScore
 from datetime import datetime
-from levels import level1, level2
+from levels import level1, level2, level3
 from Classes.buttons import Button
 
 pygame.init()
@@ -12,7 +12,9 @@ pygame.init()
 #================= COLORS ====================#
 WHITE = (255, 255, 255)
 BLUE = (0, 0, 255)
+DARKBLUE = (0, 0, 200)
 GREEN = (0, 255, 0)
+DARKGREEN = (0, 200, 0)
 RED = (255, 0, 0)
 DARKRED = (200, 0, 0)
 CHOCOLATY = (210, 105, 30)
@@ -35,7 +37,7 @@ SCORE = 0
 score_color = BLACK
 HIGH_SCORE = get_highScore()
 NAME = ""
-LEVEL = 2
+LEVEL = 1
 #============= Score window =================#
 
 #=============== Bubble sprite ==============#
@@ -50,6 +52,7 @@ col_count = WINDOW_WIDTH // (bubble_width + 4)
 def show_bubbles(level):
     if (level == 1) : level1(row_count, col_count, bubbles, all_sprites, score_height, LIGHTBLUE, (bubble_width, bubble_height))
     elif (level == 2) : level2(row_count, col_count, bubbles, all_sprites, score_height, LIGHTBLUE, (bubble_width, bubble_height))
+    elif (level == 3) : level3(row_count, col_count, bubbles, all_sprites, score_height, LIGHTBLUE, (bubble_width, bubble_height))
 show_bubbles(LEVEL)
 #=============== Bubble sprite ==============#
 
@@ -111,25 +114,40 @@ def restart():
 
 #================== Game State =====================#
 GAME_STATE = "start"
+
 def state_play(gs):
     """
         Takes game state and plays the game accordingly
     """
-    global GAME_STATE
+    global slider_direction, GAME_STATE, LEVEL, SCORE, HIGH_SCORE
     if gs == "start":
         print_text("Bubble Shooter", LIGHTBLUE, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 72)
         print_text(f"Enter your Name: {NAME}", GREEN, WINDOW_WIDTH / 2, WINDOW_HEIGHT/2 - 100, 20)
-        print_text("press Tab to play", LIGHTBLUE, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + 100, 48)
+        # print_text("press Tab to play", LIGHTBLUE, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + 100, 48)
 
         # Button(x, y, text, screen, color, hcolor)
-        startbtn = Button( 50, 50, "Play", SCREEN, RED)
+        startbtn = Button(WINDOW_WIDTH / 2 - 200, WINDOW_HEIGHT / 2 + 200, "Play", SCREEN, GREEN)
+        setbtn = Button(WINDOW_WIDTH / 2 - 50, WINDOW_HEIGHT / 2 + 200, "Settings", SCREEN, BLUE)
+        endbtn =  Button(3 * WINDOW_WIDTH / 4 - 100, WINDOW_HEIGHT / 2 + 200, "Quit", SCREEN, RED)
+
         if (startbtn.hover()) : 
-            startbtn = Button( 50, 50, "Play", SCREEN, DARKRED)
-            if (pygame.mouse.get_pressed()) : print("This is working")
+            startbtn = Button(WINDOW_WIDTH / 2 - 200, WINDOW_HEIGHT / 2 + 200, "Play", SCREEN, DARKGREEN)
+            mouseClicked = pygame.mouse.get_pressed()
+            if (mouseClicked[0]) : GAME_STATE ="play"
+
+        if (setbtn.hover()) : 
+            setbtn = Button(WINDOW_WIDTH / 2 - 50, WINDOW_HEIGHT / 2 + 200, "Settings", SCREEN, DARKBLUE)
+            mouseClicked = pygame.mouse.get_pressed()
+            if (mouseClicked[0]) : GAME_STATE ="settings"
+        
+        if (endbtn.hover()) : 
+            endbtn = Button(3 * WINDOW_WIDTH / 4 - 100, WINDOW_HEIGHT / 2 + 200, "Quit", SCREEN, DARKRED)
+            mouseClicked = pygame.mouse.get_pressed()
+            if (mouseClicked[0]) : 
+                pygame.quit()
+                quit()
 
     elif gs == "play":
-
-        global slider_direction, GAME_STATE, LEVEL, SCORE, HIGH_SCORE
         #===== moving the slider =========#
         slider.move(slider_speed, slider_direction)
         if (slider.rect.x <= 0 or slider.rect.x >= WINDOW_WIDTH - slider_width):
@@ -177,8 +195,43 @@ def state_play(gs):
         print_text("Game Over!", RED, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 72)
         print_text(f"score : {SCORE}", WHITE, 0, 10, 24, False)
         print_text(f"High Score : {HIGH_SCORE}", WHITE, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + 100, 48)
-        print_text("press spacebar to play again", LIGHTBLUE, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + 200, 48)
+        # print_text("press spacebar to play again", LIGHTBLUE, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + 200, 48)
 
+        startbtn = Button(WINDOW_WIDTH / 2 - 200, WINDOW_HEIGHT / 2 + 200, "Play Again", SCREEN, GREEN)
+        endbtn =  Button(3 * WINDOW_WIDTH / 4 - 100, WINDOW_HEIGHT / 2 + 200, "Quit", SCREEN, RED)
+
+        if (startbtn.hover()) : 
+            startbtn = Button(WINDOW_WIDTH / 2 - 200, WINDOW_HEIGHT / 2 + 200, "Play Again", SCREEN, DARKGREEN)
+            mouseClicked = pygame.mouse.get_pressed()
+            if (mouseClicked[0]) :
+                GAME_STATE ="play"
+                restart()
+        
+        if (endbtn.hover()) : 
+            endbtn = Button(3 * WINDOW_WIDTH / 4 - 100, WINDOW_HEIGHT / 2 + 200, "Quit", SCREEN, DARKRED)
+            mouseClicked = pygame.mouse.get_pressed()
+            if (mouseClicked[0]) : 
+                now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                Add_new_data(NAME, str(now), SCORE)
+                pygame.quit()
+                quit()
+    elif gs == "settings":
+        """ Settings for the game"""
+        print_text("Click on a box to change the theme", BLUE, WINDOW_WIDTH // 2, 100, 24, True)
+
+        board_size = 60
+        s_width = 60
+        s_height = 10
+        bl_r = 5
+        t_size = 15
+        def showTheme(x, y, b_c, s_c, bl_c, t_c, text):
+            back = pygame.draw.rect(SCREEN, b_c, [x, y, board_size, board_size])
+            print_text(text, WHITE, back.left-16, back.top, 16, False)
+            s = pygame.draw.rect(SCREEN, s_c, [x, back.bottom - s_height, s_width, s_height])
+            b = pygame.draw.circle(SCREEN, bl_c, (s.center[0], s.top - bl_r), bl_r)
+            t = pygame.draw.rect(SCREEN, t_c, [back.center[0], back.top + 5, t_size, t_size])
+            slider.change_color(s_c)
+        showTheme(40, WINDOW_HEIGHT/4, WHITE, GREEN, RED, LIGHTBLUE, "1")
 #================== Game State =====================#
 
 GAME_OVER = False
@@ -199,7 +252,8 @@ while not GAME_OVER:
         if event.type == pygame.KEYDOWN:
             if GAME_STATE == "start":
                 if event.key == pygame.K_TAB:
-                    GAME_STATE = "play"
+                    # GAME_STATE = "play"
+                    pass
                 else : 
                     if event.key == pygame.K_BACKSPACE :
                         NAME = NAME[:-1]
