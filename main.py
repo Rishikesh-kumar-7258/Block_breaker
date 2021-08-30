@@ -4,44 +4,18 @@ from Classes.bubbles import Bubble
 from Classes.ball import Ball
 from stats import *
 from datetime import datetime
-from levels import *
 from Classes.buttons import Button
 from Classes.themeboard import Themeboard
 from GameConstants.constants import *
 from GameConstants.variables import *
 from Functions.textfunctions import *
 
+# from statechanger import StateMachine
+# from States.start import Start
+
 pygame.init()
 
-#=============== Bubble sprite ==============#
-bubbles = pygame.sprite.Group()
-all_sprites = pygame.sprite.Group()
-
-bubble_height = 25
-bubble_width = 50
-row_count = WINDOW_HEIGHT // (bubble_height * 3)
-col_count = WINDOW_WIDTH // (bubble_width + 4)
-
-def show_bubbles(level):
-    if (level == 0) : test(row_count, col_count, bubbles, all_sprites, score_height, LIGHTBLUE, (bubble_width, bubble_height))
-    elif (level == 1) : level1(row_count, col_count, bubbles, all_sprites, score_height, LIGHTBLUE, (bubble_width, bubble_height))
-    elif (level == 2) : level2(row_count, col_count, bubbles, all_sprites, score_height, LIGHTBLUE, (bubble_width, bubble_height))
-    elif (level == 3) : level3(row_count, col_count, bubbles, all_sprites, score_height, LIGHTBLUE, (bubble_width, bubble_height))
 show_bubbles(LEVEL)
-#=============== Bubble sprite ==============#
-
-#===================== Slider =========================#
-plank = pygame.sprite.GroupSingle()
-all_sprites.add(slider)
-plank.add(slider)
-#===================== Slider =========================#
-
-#==================== Ball =======================#
-ball = Ball(ball_size, ball_size, RED)
-ball.rect.x = slider.rect.x + ball_size + 2
-ball.rect.y = slider.rect.y - slider_height - ball_size // 4
-all_sprites.add(ball)
-#==================== Ball =======================#
 
 def restart():
     """
@@ -63,10 +37,14 @@ def restart():
     show_bubbles(LEVEL)
     return
 
+# states = {
+#         "play" : Start()
+#     }
+# GAME_STATE = StateMachine(states)
+
+# GAME_STATE.change("play")
 
 #================== Game State =====================#
-GAME_STATE = "start"
-
 def state_play(gs):
     """
         Takes game state and plays the game accordingly
@@ -178,12 +156,10 @@ def state_play(gs):
         t1 = Themeboard(40, WINDOW_HEIGHT/4, WHITE, GREEN, RED, LIGHTBLUE)
 
         backbtn = Button(WINDOW_WIDTH // 2 - 100, 3*WINDOW_HEIGHT//4, "Back", SCREEN, BLUE)
+        if backbtn.hover() : backbtn = Button(WINDOW_WIDTH // 2 - 100, 3*WINDOW_HEIGHT//4, "Back", SCREEN, DARKBLUE)
         if (backbtn.clicked()):
             GAME_STATE = "start"
 #================== Game State =====================#
-
-GAME_OVER = False
-clock = pygame.time.Clock()
 
 while not GAME_OVER:
 
