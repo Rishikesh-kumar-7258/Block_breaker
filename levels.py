@@ -1,5 +1,12 @@
 from Classes.bubbles import Bubble
 
+def test(row_count, col_count, bubbles , all_sprites, score_height, color, size):
+    bubble = Bubble(size[0], size[1], color)
+    bubble.rect.x = 100
+    bubble.rect.y = 100
+    bubbles.add(bubble)
+    all_sprites.add(bubble)
+
 def level1(row_count, col_count, bubbles , all_sprites, score_height, color, size):
     for i in range(row_count):
         for j in range(col_count):

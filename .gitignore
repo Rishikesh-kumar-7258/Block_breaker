@@ -3,4 +3,6 @@ index.css
 setup.py
 virtual
 Classes/__pycache__
+Functions/__pycache__
+GameConstants/__pycache__
 stats.csv

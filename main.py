@@ -2,43 +2,16 @@ import pygame
 
 from Classes.bubbles import Bubble
 from Classes.ball import Ball
-from stats import Add_new_data, get_highScore
+from stats import *
 from datetime import datetime
-from levels import level1, level2, level3
+from levels import *
 from Classes.buttons import Button
+from Classes.themeboard import Themeboard
+from GameConstants.constants import *
+from GameConstants.variables import *
+from Functions.textfunctions import *
 
 pygame.init()
-
-#================= COLORS ====================#
-WHITE = (255, 255, 255)
-BLUE = (0, 0, 255)
-DARKBLUE = (0, 0, 200)
-GREEN = (0, 255, 0)
-DARKGREEN = (0, 200, 0)
-RED = (255, 0, 0)
-DARKRED = (200, 0, 0)
-CHOCOLATY = (210, 105, 30)
-GRAY = (128, 128, 128)
-BLACK = (0, 0, 0)
-LIGHTBLUE = (173, 216, 230)
-DARKCYAN = (0, 139, 139)
-#================= COLORS ===================#
-
-#=============== GAME WINDOW =============#
-WINDOW_WIDTH = 800
-WINDOW_HEIGHT = 600
-SCREEN = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-pygame.display.set_caption("Ball Breaker")
-#=============== GAME WINDOW =============#
-
-#============= Score window =================#
-score_height = 50
-SCORE = 0
-score_color = BLACK
-HIGH_SCORE = get_highScore()
-NAME = ""
-LEVEL = 1
-#============= Score window =================#
 
 #=============== Bubble sprite ==============#
 bubbles = pygame.sprite.Group()
@@ -50,7 +23,8 @@ row_count = WINDOW_HEIGHT // (bubble_height * 3)
 col_count = WINDOW_WIDTH // (bubble_width + 4)
 
 def show_bubbles(level):
-    if (level == 1) : level1(row_count, col_count, bubbles, all_sprites, score_height, LIGHTBLUE, (bubble_width, bubble_height))
+    if (level == 0) : test(row_count, col_count, bubbles, all_sprites, score_height, LIGHTBLUE, (bubble_width, bubble_height))
+    elif (level == 1) : level1(row_count, col_count, bubbles, all_sprites, score_height, LIGHTBLUE, (bubble_width, bubble_height))
     elif (level == 2) : level2(row_count, col_count, bubbles, all_sprites, score_height, LIGHTBLUE, (bubble_width, bubble_height))
     elif (level == 3) : level3(row_count, col_count, bubbles, all_sprites, score_height, LIGHTBLUE, (bubble_width, bubble_height))
 show_bubbles(LEVEL)
@@ -58,38 +32,16 @@ show_bubbles(LEVEL)
 
 #===================== Slider =========================#
 plank = pygame.sprite.GroupSingle()
-slider_width = 60
-slider_height = 15
-slider_speed = 8
-slider_direction = 0
-slider = Bubble(slider_width, slider_height, GREEN)
-slider.rect.x = (WINDOW_WIDTH // 2) - (slider_width // 2)
-slider.rect.y = WINDOW_HEIGHT - slider_height - 5
 all_sprites.add(slider)
 plank.add(slider)
 #===================== Slider =========================#
 
 #==================== Ball =======================#
-ball_size = 15
-ball_speed = 4
-ball_direction = [1, -1]
 ball = Ball(ball_size, ball_size, RED)
 ball.rect.x = slider.rect.x + ball_size + 2
 ball.rect.y = slider.rect.y - slider_height - ball_size // 4
 all_sprites.add(ball)
 #==================== Ball =======================#
-
-#============= Text =====================#
-def print_text(t, color, x,y, font_size, center=True):
-    font = pygame.font.SysFont("Comic sans MS", font_size)
-    text = font.render(t, True, color, BLACK)
-    textRect = text.get_rect()
-    textRect.x = x
-    textRect.y = y
-    if center : SCREEN.blit(text, (textRect[0] - textRect[2] / 2, textRect[1] - textRect[3] / 2))
-    else : SCREEN.blit(text, textRect)
-
-#============= Text =====================#
 
 def restart():
     """
@@ -192,46 +144,42 @@ def state_play(gs):
         all_sprites.update()
         all_sprites.draw(SCREEN)
     elif gs == "over":
-        print_text("Game Over!", RED, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 72)
+        if (len(bubbles) == 0) :
+            print_text("Congratulations!", GREEN, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 - 100, 72)
+            print_text("You passed the level", GREEN, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 36)
+        else : print_text("Game Over!", RED, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 72)
         print_text(f"score : {SCORE}", WHITE, 0, 10, 24, False)
         print_text(f"High Score : {HIGH_SCORE}", WHITE, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + 100, 48)
         # print_text("press spacebar to play again", LIGHTBLUE, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + 200, 48)
 
-        startbtn = Button(WINDOW_WIDTH / 2 - 200, WINDOW_HEIGHT / 2 + 200, "Play Again", SCREEN, GREEN)
+        s_text = "Next Level" if len(bubbles) == 0 else "Play Again"
+        startbtn = Button(WINDOW_WIDTH / 2 - 200, WINDOW_HEIGHT / 2 + 200, s_text, SCREEN, GREEN)
         endbtn =  Button(3 * WINDOW_WIDTH / 4 - 100, WINDOW_HEIGHT / 2 + 200, "Quit", SCREEN, RED)
 
         if (startbtn.hover()) : 
-            startbtn = Button(WINDOW_WIDTH / 2 - 200, WINDOW_HEIGHT / 2 + 200, "Play Again", SCREEN, DARKGREEN)
-            mouseClicked = pygame.mouse.get_pressed()
-            if (mouseClicked[0]) :
-                GAME_STATE ="play"
-                restart()
+            startbtn = Button(WINDOW_WIDTH / 2 - 200, WINDOW_HEIGHT / 2 + 200, s_text, SCREEN, DARKGREEN)
+        if (startbtn.clicked()):
+            GAME_STATE ="play"
+            restart()
         
         if (endbtn.hover()) : 
             endbtn = Button(3 * WINDOW_WIDTH / 4 - 100, WINDOW_HEIGHT / 2 + 200, "Quit", SCREEN, DARKRED)
             mouseClicked = pygame.mouse.get_pressed()
-            if (mouseClicked[0]) : 
-                now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                Add_new_data(NAME, str(now), SCORE)
-                pygame.quit()
-                quit()
+        if (endbtn.clicked()):
+            now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            Add_new_data(NAME, str(now), SCORE)
+            pygame.quit()
+            quit()
+                
     elif gs == "settings":
         """ Settings for the game"""
         print_text("Click on a box to change the theme", BLUE, WINDOW_WIDTH // 2, 100, 24, True)
+        
+        t1 = Themeboard(40, WINDOW_HEIGHT/4, WHITE, GREEN, RED, LIGHTBLUE)
 
-        board_size = 60
-        s_width = 60
-        s_height = 10
-        bl_r = 5
-        t_size = 15
-        def showTheme(x, y, b_c, s_c, bl_c, t_c, text):
-            back = pygame.draw.rect(SCREEN, b_c, [x, y, board_size, board_size])
-            print_text(text, WHITE, back.left-16, back.top, 16, False)
-            s = pygame.draw.rect(SCREEN, s_c, [x, back.bottom - s_height, s_width, s_height])
-            b = pygame.draw.circle(SCREEN, bl_c, (s.center[0], s.top - bl_r), bl_r)
-            t = pygame.draw.rect(SCREEN, t_c, [back.center[0], back.top + 5, t_size, t_size])
-            slider.change_color(s_c)
-        showTheme(40, WINDOW_HEIGHT/4, WHITE, GREEN, RED, LIGHTBLUE, "1")
+        backbtn = Button(WINDOW_WIDTH // 2 - 100, 3*WINDOW_HEIGHT//4, "Back", SCREEN, BLUE)
+        if (backbtn.clicked()):
+            GAME_STATE = "start"
 #================== Game State =====================#
 
 GAME_OVER = False

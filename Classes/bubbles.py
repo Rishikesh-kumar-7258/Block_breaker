@@ -8,12 +8,13 @@ class Bubble(pygame.sprite.Sprite):
 
         self.width = width
         self.height = height
+        self.color = color
 
         self.image = pygame.Surface([width, height])
         self.image.fill(WHITE)
         self.image.set_colorkey(WHITE)
 
-        pygame.draw.rect(self.image, color, [0, 0, width, height])
+        pygame.draw.rect(self.image, self.color, [0, 0, width, height])
 
         self.rect = self.image.get_rect()
 

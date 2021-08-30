@@ -2,6 +2,7 @@
 This is a simple game made using pygame
 
 ## game view
+***The game view have been update wait for the new view to be uploaded***
 https://user-images.githubusercontent.com/69416888/131142735-295211f3-8975-4251-b049-cc975127f895.mp4
 
 ## Learning concepts
@@ -27,8 +28,11 @@ If you want to try this game on your computer then do the following steps:
 1. Download the zip file from codes in this repo
 2. Unzip this file on your personal device
 3. Open command propmt / poweshell window in the unzipped file
-4. In your command prompt / powershell window type python main.py
+4. In your command prompt / powershell window type the following command
+5. python main.py
 5. If it shows some error download the required packages which is given in requirements.txt(in most of the cases, you will only need pygame)
 ```
 
-Author @Rishikesh-kumar-7258
+### Author @Rishikesh-kumar-7258
+
+**Thank you! for visiting our game. I hope you would enjoy it.**

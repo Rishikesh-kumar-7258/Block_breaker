@@ -26,3 +26,6 @@ class Button:
         mouse = pygame.mouse.get_pos()
 
         return (mouse[0] >= self.x and mouse[0] <= self.x + BUTTON_WIDTH) and (mouse[1] >= self.y and mouse[1] <= self.y + BUTTON_HEIGHT)
+    def clicked(self):
+        mouse = pygame.mouse.get_pressed()
+        return (self.hover() and mouse[0])
