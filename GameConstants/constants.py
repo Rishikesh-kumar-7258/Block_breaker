@@ -24,7 +24,8 @@ WINDOW_HEIGHT = 600
 SCREEN = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption("Ball Breaker")
 pygame.display.set_icon(LOGO)
-GAME_STATE = "start"
+
+GAME_STATE_VARIABLES = None
 GAME_OVER = False
 clock = pygame.time.Clock()
 #=============== GAME WINDOW =============#
