@@ -1,24 +1,49 @@
 import pygame
-WHITE = (255, 255, 255)
+from GameConstants.constants import *
 
-class Ball(pygame.sprite.Sprite):
+class Ball():
 
-    def __init__(self, width, height, color):
-        super().__init__()
+    def __init__(self, color):
 
-        self.image = pygame.Surface([width, height])
-        self.image.fill(WHITE)
-        self.image.set_colorkey(WHITE)
-
-
-        self.rect = self.image.get_rect()
-        pygame.draw.circle(self.image, color, self.rect.center, min(self.rect.center))
-        self.mask = pygame.mask.from_surface(self.image)
+        self.center = (0, 0)
+        self. r = 5
+        self.color = color
+        self.speed = 0
+        self.direction = [1, -1]
     
-    def move(self, speedX, speedY):
-        """
-            updates the position of sprite on every frame
-        """
+    def collides(self, obj):
 
-        self.rect.x += speedX
-        self.rect.y += speedY
+        x,y = self.center
+
+        if (x + self.r < obj.x or
+            x - self.r > obj.x + obj.width or
+            y + self.r < obj.y or
+            y - self.r > obj.y + obj.height) : return False
+        
+        return True
+    
+    def bounce(self, obj):
+
+        x, y = self.center
+
+        if (x + self.r >= obj.x and x - self.r <= obj.x + obj.width) :
+            if x + self.r >= obj.x : self.direction[1] = -1
+            else : self.direction[1] = 1
+        elif y + self.r >= obj.y and y - self.r <= obj.y + obj.height :
+            if y + self.r >= obj.y : self.direction[0] = -1
+            else : self.direction[0] = 1
+        
+
+    def render(self):
+        pygame.draw.circle(SCREEN, self.color, self.center, self.r)
+    
+    def update(self):
+
+        if self.center[0] <= self.r : self.direction[0] = 1
+        if self.center[0] >= WINDOW_WIDTH - self.r : self.direction[0] = -1
+        if self.center[1] - self.r <= 0 : self.direction[1] = 1
+
+        x = self.center[0] + self.speed * self.direction[0]
+        y = self.center[1] + self.speed * self.direction[1]
+
+        self.center = (x, y)

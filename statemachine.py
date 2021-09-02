@@ -2,7 +2,7 @@ import pygame
 
 class StateMachine:
 
-    def __init__(self, states):
+    def __init__(self, states=None):
 
         self.empty = {}
 

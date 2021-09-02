@@ -2,7 +2,7 @@ import pygame
 
 from States.Baseclass import Base
 
-from Functions.textfunctions import print_text
+from Functions.textfunctions import *
 
 from GameConstants.constants import *
 from GameConstants.variables import *
@@ -10,9 +10,9 @@ from GameConstants.variables import *
 from Classes.buttons import Button
 
 
-startbtn = Button(x = WINDOW_WIDTH // 2 - 150, y = WINDOW_HEIGHT // 2 + 200, text="Start", color=GREEN, color2 = DARKGREEN)
-settingsbtn = Button(x = WINDOW_WIDTH // 2, y = WINDOW_HEIGHT // 2 + 200, text="Settings", color=BLUE, color2 = DARKBLUE)
-endbtn = Button(x = WINDOW_WIDTH // 2 + 150, y = WINDOW_HEIGHT // 2 + 200, text="Quit", color=RED, color2 = DARKRED)
+startbtn = Button(x = WINDOW_WIDTH // 2 - 200, y = WINDOW_HEIGHT // 2 + 200, text="Start", color=GREEN, color2 = DARKGREEN)
+settingsbtn = Button(x = WINDOW_WIDTH // 2 - 50, y = WINDOW_HEIGHT // 2 + 200, text="Settings", color=BLUE, color2 = DARKBLUE)
+endbtn = Button(x = WINDOW_WIDTH // 2 + 100, y = WINDOW_HEIGHT // 2 + 200, text="Quit", color=RED, color2 = DARKRED)
 
 
 class Title(Base):
@@ -40,17 +40,18 @@ class Title(Base):
     
     def update(self, params):
 
-        global startbtn, settingsbtn, endbtn, GAME_OVER, GAME_STATE_VARIABLES
+        global startbtn, settingsbtn, endbtn
         
         if params == '\x08' : self.NAME = self.NAME[:-1]
-        elif (params != None and params != '\r') : self.NAME += params
+        elif (params != None and params != '\r' and 
+            params != "released" and params != "left" and params != "right") : self.NAME += params
 
         startbtn.update()
         settingsbtn.update()
         endbtn.update()
 
         if startbtn.clicked() : GAME_STATE_VARIABLES.change("play")
-        if settingsbtn.update() : GAME_STATE_VARIABLES.change("settings")
+        if settingsbtn.clicked() : GAME_STATE_VARIABLES.change("settings")
         if endbtn.clicked() : 
             pygame.quit()
             quit()

@@ -10,11 +10,11 @@ https://user-images.githubusercontent.com/69416888/131142735-295211f3-8975-4251-
 ## Learning concepts
 In this game we can learn how to work with 
 ```
-- Different states
-- Score calculation
-- collision detection 
-- sprites
-- movement
+* Different states
+* Score calculation
+* collision detection 
+* sprites
+* movement
 ```
 ***The sprites are made using pygame Sprite class. So, You might also learn about classed based approach on doing things.***
 

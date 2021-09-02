@@ -1,7 +1,8 @@
 import pygame
-WHITE = (255, 255, 255)
 
-class Bubble(pygame.sprite.Sprite):
+from GameConstants.constants import *
+
+class Bubble():
 
     def __init__(self, width, height, color):
         super().__init__()
@@ -9,23 +10,24 @@ class Bubble(pygame.sprite.Sprite):
         self.width = width
         self.height = height
         self.color = color
+        self.x = 0
+        self.y = 0
 
-        self.image = pygame.Surface([width, height])
-        self.image.fill(WHITE)
-        self.image.set_colorkey(WHITE)
+        self.direction = 0
+        self.speed = 0
 
-        pygame.draw.rect(self.image, self.color, [0, 0, width, height])
+        self.show = True
 
-        self.rect = self.image.get_rect()
+    def render(self):
+        global SCREEN
 
-        self.mask = pygame.mask.from_surface(self.image)
+
+        if (self.show) :
+            pygame.draw.rect(SCREEN, self.color, [self.x, self.y, self.width, self.height])
     
-    def move(self, speed, direction):
-        """
-            updates the position of sprite on every frame
-        """
+    def update(self):
 
-        self.rect.x += speed*direction
-    
-    def change_color(self, color):
-        pygame.draw.rect(self.image, color, [0, 0, self.width, self.height])
+        self.x += self.speed * self.direction
+
+    def erase(self):
+        self.show = False

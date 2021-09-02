@@ -1,9 +1,11 @@
 import pygame
 
 from GameConstants.constants import *
+from GameConstants.variables import *
 from statemachine import StateMachine
 from States.TitleScreen import Title
 from States.PlayScreen import Play
+from States.SettingsScreen import Settings
 
 pygame.init()
 
@@ -13,10 +15,8 @@ STATES = {
     "settings" : Settings()
 }
 
-GAME_STATE_VARIABLES = StateMachine(STATES)
-
+GAME_STATE_VARIABLES.states = STATES
 GAME_STATE_VARIABLES.change("TitleScreen")
-
 
 while not GAME_OVER:
 
@@ -27,7 +27,14 @@ while not GAME_OVER:
             GAME_OVER = True
         
         if event.type == pygame.KEYDOWN:
-            pressed_key = event.unicode
+
+            if event.key == pygame.K_LEFT: pressed_key = "left"
+            elif event.key == pygame.K_RIGHT : pressed_key = "right"
+            else : pressed_key = event.unicode
+        
+        if event.type == pygame.KEYUP:
+
+            pressed_key = "released"
 
     SCREEN.fill(BLACK)
     GAME_STATE_VARIABLES.update(pressed_key)
