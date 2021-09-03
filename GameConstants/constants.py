@@ -28,6 +28,5 @@ clock = pygame.time.Clock()
 
 #=============== SCORE WINDOW =============#
 score_height = 50
-SCORE = 0
 score_color = BLACK
 #=============== SCORE WINDOW =============#
