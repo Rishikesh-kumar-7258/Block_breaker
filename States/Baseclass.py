@@ -7,3 +7,5 @@ class Base:
     def render(self) : pass
 
     def update(self, params) : pass
+
+    def enter(self) : pass

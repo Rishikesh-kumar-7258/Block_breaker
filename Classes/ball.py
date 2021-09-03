@@ -15,10 +15,10 @@ class Ball():
 
         x,y = self.center
 
-        if (x + self.r < obj.x or
-            x - self.r > obj.x + obj.width or
-            y + self.r < obj.y or
-            y - self.r > obj.y + obj.height) : return False
+        if (x + self.r < obj.x - 5 or
+            x - self.r > obj.x + obj.width + 5 or
+            y + self.r < obj.y - 5 or
+            y - self.r > obj.y + obj.height + 5) : return False
         
         return True
     
@@ -26,12 +26,9 @@ class Ball():
 
         x, y = self.center
 
-        if (x + self.r >= obj.x and x - self.r <= obj.x + obj.width) :
-            if x + self.r >= obj.x : self.direction[1] = -1
-            else : self.direction[1] = 1
-        elif y + self.r >= obj.y and y - self.r <= obj.y + obj.height :
-            if y + self.r >= obj.y : self.direction[0] = -1
-            else : self.direction[0] = 1
+        if x + self.r >= obj.x and x - self.r <= obj.x + obj.width : self.direction[1] *= -1
+        if y + self.r >= obj.y and y - self.r <= obj.y + obj.height : self.direction[0] *= -1
+
         
 
     def render(self):

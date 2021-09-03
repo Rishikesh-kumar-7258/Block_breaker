@@ -16,18 +16,13 @@ class Bubble():
         self.direction = 0
         self.speed = 0
 
-        self.show = True
-
     def render(self):
         global SCREEN
 
 
-        if (self.show) :
-            pygame.draw.rect(SCREEN, self.color, [self.x, self.y, self.width, self.height])
+        # if (self.show) :
+        pygame.draw.rect(SCREEN, self.color, [self.x, self.y, self.width, self.height])
     
     def update(self):
 
         self.x += self.speed * self.direction
-
-    def erase(self):
-        self.show = False

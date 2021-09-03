@@ -6,13 +6,17 @@ from statemachine import StateMachine
 from States.TitleScreen import Title
 from States.PlayScreen import Play
 from States.SettingsScreen import Settings
+from States.WinScreen import Win
+from States.GameOver import Over
 
 pygame.init()
 
 STATES = {
     "TitleScreen" : Title(),
     "play" : Play(),
-    "settings" : Settings()
+    "settings" : Settings(),
+    "win" : Win(),
+    "over" : Over()
 }
 
 GAME_STATE_VARIABLES.states = STATES

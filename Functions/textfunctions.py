@@ -15,7 +15,7 @@ def print_text(t, color, x,y, font_size, center=True):
 #============= Text =====================#
 
 def show_bubbles(level):
-    if (level == 0) : return test(10, 10, 5, LIGHTBLUE, (30, 30))
-    if (level == 1) : return level1(row_count, col_count, score_height, LIGHTBLUE, (bubble_width, bubble_height))
-    if (level == 2) : return level2(row_count, col_count, score_height, LIGHTBLUE, (bubble_width, bubble_height))
-    if (level == 3) : return level3(row_count, col_count, score_height, LIGHTBLUE, (bubble_width, bubble_height))
+    if (level == 0) : return test()
+    if (level == 1) : return level1()
+    if (level == 2) : return level2()
+    if (level == 3) : return level3()

@@ -14,6 +14,7 @@ class StateMachine:
         if not state in self.states: return
 
         self.current = self.states[state]
+        self.current.enter()
     
     def render(self):
         self.current.render()
