@@ -12,7 +12,7 @@ This is a very popular game. Here this game is implemented in **python** using *
 
 ## Languages used
 <p align="left">
-<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg"alt="python" width="40"/> </a> <a href="https://reactjs.org/" target="_blank"><img>
+<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg"alt="python" width="40"/>  <a href="https://reactjs.org/" target="_blank"></a>
 <p>
 
 ## Concepts to learn
