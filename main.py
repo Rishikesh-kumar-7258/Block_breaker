@@ -1,50 +1,34 @@
 import pygame
 
-from GameConstants.constants import *
-from GameConstants.variables import *
-from statemachine import StateMachine
-from States.TitleScreen import Title
-from States.PlayScreen import Play
-from States.SettingsScreen import Settings
-from States.WinScreen import Win
-from States.GameOver import Over
-
+from Utils.spritesheet import SpriteSheet, balls, blocks, sliders
 pygame.init()
 
-STATES = {
-    "TitleScreen" : Title(),
-    "play" : Play(),
-    "settings" : Settings(),
-    "win" : Win(),
-    "over" : Over()
-}
+# parameters for the screen
+screen_width = 800
+screen_height = 600
 
-GAME_STATE_VARIABLES.states = STATES
-GAME_STATE_VARIABLES.change("TitleScreen")
+# Setting up the screen
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption("Block Breaker")
+pygame.display.set_icon(pygame.image.load("images/logo.png"))
 
-while not GAME_OVER:
+# spritesheet
+sprite = SpriteSheet("images/spritesheet.png")
+block_array = blocks(sprite)
+ball_array = balls(sprite)
+slider_array = sliders(sprite)
 
-    pressed_key = None
+# setting up the game loop
+running = True
+while running:
+    # event handling
     for event in pygame.event.get():
-
         if event.type == pygame.QUIT:
-            GAME_OVER = True
-        
-        if event.type == pygame.KEYDOWN:
+            running = False
 
-            if event.key == pygame.K_LEFT: pressed_key = "left"
-            elif event.key == pygame.K_RIGHT : pressed_key = "right"
-            else : pressed_key = event.unicode
-        
-        if event.type == pygame.KEYUP:
-
-            pressed_key = "released"
-
-    SCREEN.fill(BLACK)
-    GAME_STATE_VARIABLES.update(pressed_key)
-    pygame.display.flip()
-    clock.tick(60)
-
+    # drawing the screen
+    screen.fill((0, 0, 0))
+    pygame.display.update()
 
 pygame.quit()
 quit()
