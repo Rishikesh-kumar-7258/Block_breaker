@@ -1,6 +1,6 @@
 import pygame
 
-from Utils.spritesheet import SpriteSheet, balls, blocks, sliders
+from src.spritesheet import SpriteSheet, balls, blocks, sliders
 pygame.init()
 
 # parameters for the screen
