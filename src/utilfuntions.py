@@ -13,3 +13,25 @@ def Write(screen, text, x, y, size, color, center=False) -> None:
         rect.x = x
         rect.y = y
     screen.blit(text, rect)
+
+def update_score(player_name, player_score):
+
+    file = open("scores.csv", 'a')
+
+    file.write(player_name + ',' + str(player_score) + '\n')
+        
+def get_score():
+    file = open("scores.csv", 'r')
+
+    scores = {}
+    i = 0
+    for line in file:
+        i += 1
+        if i == 1:
+            continue
+        line = line.strip()
+        player, score = line.split(',')
+        scores[player] = int(score)
+
+    file.close()
+    return sorted(scores.items(), key=lambda x: x[1], reverse=True)

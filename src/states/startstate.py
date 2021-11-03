@@ -17,7 +17,7 @@ class Start(Base):
     
     def render(self) -> None:
         
-        Write(self.screen, "Ball Breaker", self.screen_width // 2, self.screen_height // 2, 100, THECOLORS['darkred'], True)
+        Write(self.screen, "Ball Breaker", self.screen_width // 2, self.screen_height // 2, 100, THECOLORS['darkgoldenrod'], True)
         
         for i in range(len(self.options)):
             color = THECOLORS['skyblue'] if i == self.active else THECOLORS['white']
