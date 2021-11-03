@@ -12,6 +12,9 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Block Breaker")
 pygame.display.set_icon(pygame.image.load("images/logo.png"))
 
+# differenst states
+gameStates = {}
+
 # spritesheet
 sprite = SpriteSheet("images/spritesheet.png")
 block_array = blocks(sprite)
