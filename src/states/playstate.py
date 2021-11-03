@@ -32,8 +32,8 @@ class Play(Base):
         # slider and ball properties
         self.slider_speed = 6
         self.current_slider_speed = 0
-        self.ball_speed = (6, 6)
-        self.current_ball_speed = (6, 6)
+        self.ball_speed = 6
+        self.current_ball_speed = (6, -6)
 
         
     def render(self) -> None:
@@ -64,6 +64,13 @@ class Play(Base):
         slider_rect.y = self.slider['y']
         self.screen.blit(slider_image, slider_rect)
 
+        # rendering the ball
+        ball_image = self.ball_array[self.ball['number']]
+        ball_rect = ball_image.get_rect()
+        ball_rect.centerx = self.ball['x']
+        ball_rect.y = self.ball['y']
+        self.screen.blit(ball_image, ball_rect)
+
         
 
     def update(self, param) -> None:
@@ -86,6 +93,20 @@ class Play(Base):
         if self.slider['x'] + self.slider['width'] / 2 + 8 > self.screen_width:
             self.slider['x'] = self.screen_width - self.slider['width'] / 2 - 8
         self.slider['x'] += self.current_slider_speed
+
+        # changing the position of ball
+        if self.ball['x'] - self.ball['radius']  - 2 <= 0 or self.ball['x'] + self.ball['radius'] + 2 >= self.screen_width:
+            a, b = self.current_ball_speed
+            a *= -1
+            self.current_ball_speed = (a, b)
+        
+        if self.ball['y'] + 2 < self.screen_height / 10:
+            a, b = self.current_ball_speed
+            b *= -1
+            self.current_ball_speed = (a, b)
+        
+        self.ball['x'] += self.current_ball_speed[0]
+        self.ball['y'] += self.current_ball_speed[1]
 
         self.render()
     
@@ -119,4 +140,4 @@ class Play(Base):
         self.slider['y'] = self.screen_height - self.slider['height'] - 10
         self.ball = BALL.copy()
         self.ball['x'] = self.screen_width // 2
-        self.slider['y'] = self.slider['y'] + 5
+        self.ball['y'] = self.slider['y'] - 2*self.ball['radius'] - 5
