@@ -37,12 +37,6 @@ gstatemachine.change("start",   screen=screen,
                     )
 gstatemachine.render()
 
-# spritesheet
-sprite = SpriteSheet("images/spritesheet.png")
-block_array = blocks(sprite)
-ball_array = balls(sprite)
-slider_array = sliders(sprite)
-
 # setting up the clock
 clock = pygame.time.Clock()
 

@@ -1,4 +1,5 @@
 import pygame
+from pygame.constants import SRCALPHA
 
 
 class SpriteSheet:
@@ -52,3 +53,13 @@ def balls(spritesheet) -> list():
         ball_array.append(spritesheet.make_sprite(i * 20, 40, 20, 20))
 
     return ball_array
+
+def hearts(spritesheet) -> list():
+    """ Makes and returns the hearts list """
+
+    heart_array = []
+
+    for i in range(2):
+        heart_array.append(spritesheet.make_sprite(i * 20 + 60, 40, 20, 20))
+
+    return heart_array
