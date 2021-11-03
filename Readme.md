@@ -23,6 +23,7 @@ In this game we can learn how to work with
 * collision detection 
 * sprites
 * movement
+* Spritesheets
 
 ## Contribution
 - [ ] There are some issues in this game, feel free to check them out and contribute if you can solve them

@@ -1,4 +1,4 @@
-class GameStateChanger:
+class Statemachine:
     """
     This class will help in managing the differnt states in the game.
     """
@@ -16,11 +16,11 @@ class GameStateChanger:
             return
 
         # leaving the current state
-        self.current.leave()
+        if self.current : self.current.leave()
 
         # Making the passed state as the current state
         self.current = self.states[state]
-        self.current.enter()
+        self.current.enter(**params)
     
     def render(self):
         """ redering the current state """

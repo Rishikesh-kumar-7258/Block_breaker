@@ -5,13 +5,14 @@ class Base:
         """ constructor class """
 
         pass
-    def enter(self, entity) -> None:
+    def enter(self, **entity) -> None:
         """ This is the enter function. Called first when state is changed """
 
         pass
     
     def leave(self) -> None:
         """ This is the leave function. Used during changing state."""
+        pass
     
     def update(self, entity) -> None:
         """ This is the update function. Called every frame """

@@ -1,9 +1,9 @@
 import pygame
 from src.states.basestate import Base
 
-class SliderChoosing(Base):
+class Highscore(Base):
 
-    """ This state is active after the start state or before the play state. """
+    """ This state is active after the player clicks highscore button in startscreen. """
 
     def __init__(self) -> None:
         super().__init__()

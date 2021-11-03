@@ -7,3 +7,6 @@ class GameOver(Base):
 
     def __init__(self) -> None:
         super().__init__()
+
+    def render(self) -> None:
+        pass
