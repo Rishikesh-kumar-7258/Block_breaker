@@ -1,12 +1,12 @@
 import pygame
 from pygame.color import THECOLORS
-from pygame.constants import K_LEFT, K_RIGHT, KEYDOWN, KEYUP
+from pygame.constants import K_LEFT, K_RIGHT, K_SPACE, KEYDOWN, KEYUP
 from src.levels import level
 from src.objects import BALL, HEART, SLIDER
 
 from src.states.basestate import Base
 from src.spritesheet import SpriteSheet, blocks, balls, hearts, sliders
-from src.utilfuntions import Write
+from src.utilfuntions import Write, collision
 
 class Play(Base):
 
@@ -24,29 +24,36 @@ class Play(Base):
         self.slider_array = sliders(self.sprite)
         self.heart_array = hearts(self.sprite)
 
+        self.block_score_array = [10, 10, 10, 20]
+
         # player properties
         self.score = 0
         self.lives_array = []
         self.lives = 3
+        self.remaining_lives = self.lives
 
         # slider and ball properties
-        self.slider_speed = 6
+        self.slider_speed = 8
         self.current_slider_speed = 0
         self.ball_speed = 6
         self.current_ball_speed = (6, -6)
 
+
+        self.paused = False
         
     def render(self) -> None:
 
         # rendering the header
         self.screen.blit(self.header, (0, 0))
+        self.header.fill(THECOLORS["darkgreen"])
         for i in range(self.lives):
-            image = self.heart_array[0] if self.lives_array[0]['alive'] else self.heart_array[1]
+            image = self.heart_array[0] if self.lives_array[i]['alive'] else self.heart_array[1]
             image.set_colorkey(THECOLORS['white'])
             rect = image.get_rect()
             rect.centerx = self.lives_array[i]['x']
             rect.centery = self.lives_array[i]['y']
             self.header.blit(image, rect)
+        Write(self.header, f"Score: {self.score}", 40, self.header_rect.centery, 24, THECOLORS['white'] , True)
         
         # rendering the blocks on the screen
         for block in self.all_blocks:
@@ -82,11 +89,20 @@ class Play(Base):
                     self.current_slider_speed = self.slider_speed
                 if event.key == K_LEFT:
                     self.current_slider_speed = -self.slider_speed
+                
+                if event.key == K_SPACE:
+                    self.paused = not self.paused
             
             if event.type == KEYUP:
                 if event.key == K_RIGHT or event.key == K_LEFT:
                     self.current_slider_speed = 0
         
+        self.render()
+
+        # if the game is paused
+        if self.paused:
+            return
+
         # changing the position of slider
         if self.slider['x'] - self.slider['width'] /2 - 8 < 0:
             self.slider['x'] = self.slider['width'] / 2 + 8
@@ -104,11 +120,35 @@ class Play(Base):
             a, b = self.current_ball_speed
             b *= -1
             self.current_ball_speed = (a, b)
+
+        if self.ball['y'] - self.ball['radius'] - 2 > self.screen_height:
+            self.remaining_lives -= 1
+            self.lives_array[self.remaining_lives]['alive'] = False
+            self.ball['x'] = self.slider['x']
+            self.ball['y'] = self.slider['y'] - self.ball['height'] - 2
+            self.paused = True
+        
+        if self.remaining_lives == 0:
+            self.gstatemachine.change('over', screen=self.screen, score=self.score, gstatemachine=self.gstatemachine)
         
         self.ball['x'] += self.current_ball_speed[0]
         self.ball['y'] += self.current_ball_speed[1]
 
-        self.render()
+        # handlind collision between ball and the slider
+        if collision(self.ball, self.slider):
+            a, b = self.current_ball_speed
+            self.current_ball_speed = (a, -self.ball_speed)
+
+        
+        # handling the collision between ball and the blocks
+        for block in self.all_blocks:
+            if block['alive'] and collision(self.ball, block):
+                block['number'] -= 1
+                if block['number'] < 0:
+                    block['alive'] = False
+                a, b = self.current_ball_speed
+                self.current_ball_speed = (a, self.ball_speed)
+                self.score += self.block_score_array[block['number'] + 1]
     
     def enter(self, **params) -> None:
 
@@ -123,7 +163,6 @@ class Play(Base):
         self.header = pygame.Surface((self.screen_width, self.screen_height/10))
         self.header.fill(THECOLORS['darkgreen'])
         self.header_rect = self.header.get_rect()
-        Write(self.header, f"Score: {self.score}", 40, self.header_rect.centery, 24, THECOLORS['white'] , True)
 
         for i in range(self.lives):
             heart = HEART.copy()
@@ -140,4 +179,4 @@ class Play(Base):
         self.slider['y'] = self.screen_height - self.slider['height'] - 10
         self.ball = BALL.copy()
         self.ball['x'] = self.screen_width // 2
-        self.ball['y'] = self.slider['y'] - 2*self.ball['radius'] - 5
+        self.ball['y'] = self.slider['y'] - self.ball['height'] - 5

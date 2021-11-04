@@ -50,7 +50,7 @@ def balls(spritesheet) -> list():
     ball_array = []
 
     for i in range(3):
-        ball_array.append(spritesheet.make_sprite(i * 20, 40, 20, 20))
+        ball_array.append(spritesheet.make_sprite(i * 16, 40, 16, 16))
 
     return ball_array
 

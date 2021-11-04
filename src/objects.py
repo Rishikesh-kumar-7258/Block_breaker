@@ -20,7 +20,9 @@ BALL = {
     'y' : 0,
     'number' : 0,
     'is_invincible' : False,
-    'radius' : 10
+    'radius' : 8,
+    'width' : 16,
+    'height' : 16
 }
 
 SLIDER = {
