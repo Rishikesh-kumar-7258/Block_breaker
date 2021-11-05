@@ -1,4 +1,5 @@
 import pygame
+from src.objects import PARTICLE
 
 # displaying text on the screen
 def Write(screen, text, x, y, size, color, center=False) -> None:

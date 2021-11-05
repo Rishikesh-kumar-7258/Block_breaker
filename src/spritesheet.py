@@ -73,3 +73,19 @@ def buttons(spritesheet) -> list():
         button_array.append(spritesheet.make_sprite(i * 20 + 100, 40, 20, 20))
 
     return button_array
+
+def particles(number:int, color:tuple, pos:tuple, velocity:float, acceleration:float):
+    """ Makes and return some particles """
+    
+    particle_array = []
+    
+    for i in range(number):
+        particle = PARTICLE.copy()
+        particle['x'] = pos[0]
+        particle['y'] = pos[1]
+        particle['velocity'] = velocity
+        particle['acceleration'] = acceleration
+        particle['color'] = color
+        particle_array.append(particle)
+        
+    return particle_array

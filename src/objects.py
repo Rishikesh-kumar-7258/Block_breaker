@@ -40,3 +40,13 @@ BUTTON = {
     'height' : 20,
     'number' : 0
 }
+
+PARTICLE = {
+    'x' : 0,
+    'y' : 0,
+    'r' : 2,
+    'velocity' : 5,
+    'acceleration' : 2,
+    'color' : (255, 255, 255),
+    'direction' : 'up'
+}

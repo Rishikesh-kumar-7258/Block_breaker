@@ -1,11 +1,11 @@
 import pygame
 from pygame.color import THECOLORS
 from pygame.constants import K_LEFT, K_RIGHT, K_SPACE, KEYDOWN, KEYUP
+
 from src.levels import level
 from src.objects import BALL, HEART, SLIDER
-
 from src.states.basestate import Base
-from src.spritesheet import SpriteSheet, blocks, balls, hearts, sliders
+from src.spritesheet import SpriteSheet, blocks, balls, hearts, sliders, particles
 from src.utilfuntions import Write, collision
 
 class Play(Base):
@@ -23,6 +23,7 @@ class Play(Base):
         self.ball_array = balls(self.sprite)
         self.slider_array = sliders(self.sprite)
         self.heart_array = hearts(self.sprite)
+        #self.particles_array = particles()
 
         self.block_score_array = [10, 10, 10, 20]
 

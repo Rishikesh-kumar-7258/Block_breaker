@@ -32,9 +32,7 @@ gameStates = {
 
 # statemachine
 gstatemachine = Statemachine(gameStates)
-gstatemachine.change("start",   screen=screen,
-                                gstatemachine=gstatemachine
-                    )
+gstatemachine.change("start",   screen=screen,gstatemachine=gstatemachine,)
 gstatemachine.render()
 
 # setting up the clock
