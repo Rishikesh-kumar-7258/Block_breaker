@@ -12,7 +12,7 @@ class Start(Base):
     def __init__(self) -> None:
         super().__init__()
 
-        self.options = ["start", "highscore"]
+        self.options = ["Start", "Hight Scores"]
         self.active = 0
     
     def render(self) -> None:
@@ -40,9 +40,11 @@ class Start(Base):
                 
                 # when enter is pressed
                 if event.key == K_RETURN:
-                    state = str(self.options[self.active])
-                    if (self.options[self.active] == "start"):
-                        state = "play"
+                    state = None
+                    if self.active == 0:
+                        state = 'sliders'
+                    elif self.active == 1:
+                        state = 'highscore'
                     self.gstatemachine.change(state,    screen=self.screen,
                                                         gstatemachine=self.gstatemachine,
                                             )

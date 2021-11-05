@@ -32,3 +32,11 @@ SLIDER = {
     'height' : 20,
     'number' : 0
 }
+
+BUTTON = {
+    'x' : 0,
+    'y' : 0,
+    'width' : 20,
+    'height' : 20,
+    'number' : 0
+}

@@ -158,6 +158,7 @@ class Play(Base):
         self.screen_width = self.screen.get_width()
         self.screen_height = self.screen.get_height()
         self.gstatemachine = params['gstatemachine']
+        self.slider_number = params['slider_number']
 
         # Making header for the game
         self.header = pygame.Surface((self.screen_width, self.screen_height/10))
@@ -173,10 +174,13 @@ class Play(Base):
         # getting the blocks
         self.all_blocks = level(self.screen, 0)
 
-        # Ball and slider
+        # slider
         self.slider = SLIDER.copy()
         self.slider['x'] = self.screen_width // 2
         self.slider['y'] = self.screen_height - self.slider['height'] - 10
+        self.slider['number'] = self.slider_number
+
+        # Ball
         self.ball = BALL.copy()
         self.ball['x'] = self.screen_width // 2
         self.ball['y'] = self.slider['y'] - self.ball['height'] - 5

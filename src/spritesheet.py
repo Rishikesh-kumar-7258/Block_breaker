@@ -63,3 +63,13 @@ def hearts(spritesheet) -> list():
         heart_array.append(spritesheet.make_sprite(i * 20 + 60, 40, 20, 20))
 
     return heart_array
+
+def buttons(spritesheet) -> list():
+    """ Makes and returns the button list """
+
+    button_array = []
+
+    for i in range(4):
+        button_array.append(spritesheet.make_sprite(i * 20 + 100, 40, 20, 20))
+
+    return button_array

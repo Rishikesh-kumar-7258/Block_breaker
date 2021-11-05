@@ -1,5 +1,6 @@
 import pygame
 from pygame.color import THECOLORS
+from pygame.constants import K_RETURN, KEYDOWN
 
 from src.states.basestate import Base
 from src.utilfuntions import Write, get_score
@@ -24,8 +25,15 @@ class Highscore(Base):
             i += 1
             if (i == 10):
                 break
+        
+        Write(self.screen, "Back", self.screen_width/2, self.screen_height-40, 48, THECOLORS['skyblue'], True)
 
     def update(self, param) -> None:
+
+        for event in param:
+            if event.type == KEYDOWN:
+                if event.key == K_RETURN:
+                    self.gstatemachine.change('start', screen=self.screen, gstatemachine=self.gstatemachine)
         
         self.render()
     
