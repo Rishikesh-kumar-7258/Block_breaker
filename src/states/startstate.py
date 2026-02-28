@@ -12,7 +12,7 @@ class Start(Base):
     def __init__(self) -> None:
         super().__init__()
 
-        self.options = ["Start", "Hight Scores"]
+        self.options = ["Start", "Hight Scores", "Exit"]
         self.active = 0
     
     def render(self) -> None:
@@ -48,6 +48,9 @@ class Start(Base):
                     self.gstatemachine.change(state,    screen=self.screen,
                                                         gstatemachine=self.gstatemachine,
                                             )
+                    if self.active == 2:
+                        pygame.quit()
+                        quit()
 
         self.render()
 

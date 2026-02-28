@@ -21,6 +21,8 @@ class SliderChoosing(Base):
     def render(self) -> None:
 
         Write(self.screen, "Press enter to choose", self.screen_width / 2, self.screen_height / 2 - 50, 72, THECOLORS['darkgoldenrod'], True)
+        Write(self.screen, "Use left and right arrow keys to navigate", self.screen_width / 2, self.screen_height / 2 + 50, 30, THECOLORS['white'], True)
+        Write(self.screen, "back to menu", self.screen_width / 2, self.screen_height - 50, 30, THECOLORS['white'], True)
 
         slider_image = self.slider_array[self.slider['number']]
         slider_rect = slider_image.get_rect()
@@ -50,8 +52,10 @@ class SliderChoosing(Base):
                                                         slider_number=self.slider['number'])
                 if event.key == K_RIGHT:
                     if self.slider['number'] < len(self.slider_array) - 1 : self.slider['number'] += 1
+                    # self.slider['number'] = (self.slider['number'] + 1) % len(self.slider_array)
                 if event.key == K_LEFT:
                     if self.slider['number'] > 0 : self.slider['number'] -= 1
+                    # self.slider['number'] = (self.slider['number'] - 1) % len(self.slider_array)
 
         if self.slider['number'] == 0:
             self.left_button['number'] = 2
@@ -62,6 +66,7 @@ class SliderChoosing(Base):
             self.right_button['number'] = 3
         else:
             self.right_button['number'] = 1
+
         
         self.render()
     
